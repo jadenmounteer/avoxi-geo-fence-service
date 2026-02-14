@@ -44,8 +44,30 @@ go build -o avoxi-geo-fence ./cmd/server
 
 #### Test the Endpoint
 
+##### Good request
+
 ```bash
 curl -X POST http://localhost:8080/v1/check \
   -H "Content-Type: application/json" \
   -d '{"ip_address": "8.8.8.8", "allowed_countries": ["US", "CA"]}'
 ```
+
+##### Bad request (invalid IP)
+
+```bash
+curl -X POST http://localhost:8080/v1/check \
+  -H "Content-Type: application/json" \
+  -d '{"ip_address": "not-an-ip", "allowed_countries": ["US"]}'
+```
+
+Returns `400` with `{"error": "invalid IP: not-an-ip"}`.
+
+##### Bad request (empty country list)
+
+```bash
+curl -X POST http://localhost:8080/v1/check \
+  -H "Content-Type: application/json" \
+  -d '{"ip_address": "8.8.8.8", "allowed_countries": []}'
+```
+
+Returns `400` with `{"error": "allowed_countries must contain at least one country"}`.

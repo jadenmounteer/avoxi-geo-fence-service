@@ -67,6 +67,15 @@ func TestCheckHandler_ServeHTTP(t *testing.T) {
 			checkContentType: true,
 		},
 		{
+			name:            "POST empty allowed_countries",
+			method:          http.MethodPost,
+			body:            `{"ip_address":"8.8.8.8","allowed_countries":[]}`,
+			mockLookup:      func(net.IP) (string, error) { return "US", nil },
+			wantStatus:      http.StatusBadRequest,
+			wantErrInBody:   true,
+			checkContentType: true,
+		},
+		{
 			name:            "GET returns 405",
 			method:          http.MethodGet,
 			body:            "",

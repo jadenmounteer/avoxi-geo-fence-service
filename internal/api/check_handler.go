@@ -38,6 +38,13 @@ func (h *CheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(req.AllowedCountries) == 0 {
+		slog.Info("empty allowed_countries in request")
+		w.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(w).Encode(ErrorResponse{Error: "allowed_countries must contain at least one country"})
+		return
+	}
+
 	result, err := h.checker.Check(req.IPAddress, req.AllowedCountries)
 	if err != nil {
 		if errors.Is(err, geofence.ErrUnknownIP) {
@@ -46,6 +53,7 @@ func (h *CheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if strings.Contains(err.Error(), "invalid IP") {
+			slog.Info("invalid IP in request", "ip_address", req.IPAddress, "err", err)
 			w.WriteHeader(http.StatusBadRequest)
 			_ = json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
 			return
