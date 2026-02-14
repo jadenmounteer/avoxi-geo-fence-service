@@ -46,11 +46,11 @@ You will replace standard text logging with Go's native slog (introduced in Go 1
 
 #### Acceptance Criteria (AC)
 
-- [ ] JSON Output: All application logs are printed in valid JSON format.
+- [x] JSON Output: All application logs are printed in valid JSON format.
 
-- [ ] Standard Fields: Every log entry includes a time, level, and msg.
+- [x] Standard Fields: Every log entry includes a time, level, and msg.
 
-- [ ] Request Logging: Every API call produces a log line containing:
+- [x] Request Logging: Every API call produces a log line containing:
   - method (e.g., POST)
 
   - path (e.g., /v1/check)
@@ -59,11 +59,11 @@ You will replace standard text logging with Go's native slog (introduced in Go 1
 
   - duration_ms (how long the lookup took)
 
-- [ ] No Secrets: Ensure logs do not leak sensitive info (though for this project, IP addresses are the primary data).
+- [x] No Secrets: Ensure logs do not leak sensitive info (though for this project, IP addresses are the primary data).
 
-- [ ] Standard Library Only: Accomplished using log/slog to keep the binary lean (following your modular rules).
+- [x] Standard Library Only: Accomplished using log/slog to keep the binary lean (following your modular rules).
 
-### Task 2.3: Implement Environment Variable Configuration for Data Paths and Ports
+### Task 2.3: Implement Environment Variable Configuration for Data Paths and Ports ✅
 
 You will modify your application to look for environment variables at startup. If they aren't found, the app should "fail-safe" by using sensible defaults.
 
@@ -77,13 +77,13 @@ You will modify your application to look for environment variables at startup. I
 
 #### Acceptance Criteria (AC)
 
-- [ ] No Hardcoding: The port and database path are not hardcoded strings in the logic.
+- [x] No Hardcoding: The port and database path are not hardcoded strings in the logic.
 
-- [ ] Sensible Defaults: If I run the app without setting any variables, it still works (using local defaults).
+- [x] Sensible Defaults: If I run the app without setting any variables, it still works (using local defaults).
 
-- [ ] Validation: The app logs an error and exits (Fail-Fast) if a provided DB_PATH does not exist.
+- [x] Validation: The app logs an error and exits (Fail-Fast) if a provided DB_PATH does not exist.
 
-- [ ] Documentation: The README includes a section listing all available environment variables and their purposes.
+- [x] Documentation: The README includes a section listing all available environment variables and their purposes.
 
 ### Task 2.4: Define Kubernetes Deployment and Service Manifests
 

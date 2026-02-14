@@ -20,7 +20,7 @@ docker run -p 8080:8080 avoxi-geo-fence
 To use a different host port:
 
 ```bash
-docker run -p 3000:8080 -e PORT=8080 avoxi-geo-fence
+docker run -p 3000:8080 -e APP_PORT=8080 avoxi-geo-fence
 ```
 
 #### Running Locally
@@ -38,9 +38,14 @@ go build -o avoxi-geo-fence ./cmd/server
 ./avoxi-geo-fence
 ```
 
-#### Configure Environment
+#### Environment Variables
 
-- **PORT:** The port the server listens on (default: 8080).
+| Variable  | Default                      | Description                                |
+| --------- | ---------------------------- | ------------------------------------------ |
+| APP_PORT  | 8080                         | Port the server listens on                 |
+| PORT      | (fallback if APP_PORT unset) | Alternative for Heroku, Cloud Run, etc.    |
+| DB_PATH   | data/GeoLite2-Country.mmdb   | Path to GeoLite2-Country.mmdb              |
+| LOG_LEVEL | info                         | Log level: debug, info, warn, error        |
 
 #### Test the Endpoint
 

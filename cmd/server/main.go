@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -15,17 +16,54 @@ import (
 
 const version = "1.0.0"
 
-func main() {
-	jsonHandler := slog.NewJSONHandler(os.Stdout, nil)
-	logger := slog.New(jsonHandler).With("service", "geo-fence-service", "version", version)
-	slog.SetDefault(logger)
+type config struct {
+	port     string
+	dbPath   string
+	logLevel slog.Level
+}
 
-	port := os.Getenv("PORT")
+func loadConfig() config {
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = os.Getenv("PORT")
+	}
 	if port == "" {
 		port = "8080"
 	}
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "data/GeoLite2-Country.mmdb"
+	}
+	level := parseLogLevel(os.Getenv("LOG_LEVEL"))
+	return config{port: port, dbPath: dbPath, logLevel: level}
+}
 
-	store, err := geofence.NewGeoStore(geofence.DefaultDBPath)
+func parseLogLevel(s string) slog.Level {
+	switch strings.ToLower(s) {
+	case "debug":
+		return slog.LevelDebug
+	case "warn":
+		return slog.LevelWarn
+	case "error":
+		return slog.LevelError
+	default:
+		return slog.LevelInfo
+	}
+}
+
+func main() {
+	cfg := loadConfig()
+
+	jsonHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: cfg.logLevel})
+	logger := slog.New(jsonHandler).With("service", "geo-fence-service", "version", version)
+	slog.SetDefault(logger)
+
+	if _, err := os.Stat(cfg.dbPath); os.IsNotExist(err) {
+		slog.Error("database file does not exist", "path", cfg.dbPath)
+		os.Exit(1)
+	}
+
+	store, err := geofence.NewGeoStore(cfg.dbPath)
 	if err != nil {
 		slog.Error("failed to open GeoIP database", "err", err)
 		os.Exit(1)
@@ -37,7 +75,7 @@ func main() {
 	mux.Handle("/v1/check", api.LoggingMiddleware(handler))
 
 	server := &http.Server{
-		Addr:    ":" + port,
+		Addr:    ":" + cfg.port,
 		Handler: mux,
 	}
 
@@ -48,7 +86,7 @@ func main() {
 		}
 	}()
 
-	slog.Info("server starting", "port", port)
+	slog.Info("server starting", "port", cfg.port)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
