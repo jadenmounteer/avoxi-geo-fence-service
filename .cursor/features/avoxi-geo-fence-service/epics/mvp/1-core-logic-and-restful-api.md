@@ -95,7 +95,7 @@ You need to create the logic that ties the IP lookup to the "White List" of coun
 
 - [x] Unit Tested: At least 3 unit tests exist covering: a successful match, a blocked match, and an invalid IP.
 
-### Task 1.4: Develop HTTP/JSON Handler and API Routing
+### Task 1.4: Develop HTTP/JSON Handler and API Routing ✅
 
 You will create the web server layer. This layer is responsible for "unmarshalling" (parsing) the incoming JSON, calling your GeoStore logic, and "marshalling" (encoding) the result back into a JSON response.
 
@@ -117,15 +117,15 @@ You will create the web server layer. This layer is responsible for "unmarshalli
 
 #### Acceptance Criteria (AC)
 
-- [ ] Endpoint exists: The server listens on a configurable port (defaulting to :8080) and responds to POST /v1/check.
+- [x] Endpoint exists: The server listens on a configurable port (defaulting to :8080) and responds to POST /v1/check.
 
-- [ ] Request Validation: Returns 405 Method Not Allowed for GET requests.
+- [x] Request Validation: Returns 405 Method Not Allowed for GET requests.
 
-- [ ] JSON Schema: Accurately maps ip_address and allowed_countries from the JSON body.
+- [x] JSON Schema: Accurately maps ip_address and allowed_countries from the JSON body.
 
-- [ ] Error Handling: Returns a clear JSON error message and 400 Bad Request if the JSON is malformed or the IP is invalid.
+- [x] Error Handling: Returns a clear JSON error message and 400 Bad Request if the JSON is malformed or the IP is invalid.
 
-- [ ] Content-Type: Correctly sets Content-Type: application/json in the response header.
+- [x] Content-Type: Correctly sets Content-Type: application/json in the response header.
 
 ### Task 1.5: Implement Graceful Shutdown and Resource Cleanup
 

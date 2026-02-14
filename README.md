@@ -27,7 +27,7 @@ DB_PATH: The relative path to your MaxMind database (default: ./data/GeoLite2-Co
 
 #### Run the server
 
-`go run cmd/server/main.go`
+`./avoxi-geo-fence`
 
 #### Test the endpoint
 
