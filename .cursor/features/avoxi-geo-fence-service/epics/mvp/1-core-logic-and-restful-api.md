@@ -127,7 +127,7 @@ You will create the web server layer. This layer is responsible for "unmarshalli
 
 - [x] Content-Type: Correctly sets Content-Type: application/json in the response header.
 
-### Task 1.5: Implement Graceful Shutdown and Resource Cleanup
+### Task 1.5: Implement Graceful Shutdown and Resource Cleanup✅
 
 You need to instruct your Go application to listen for "Termination Signals" from the Operating System (like SIGINT or SIGTERM, which Kubernetes sends when it wants to stop a container). Instead of exiting instantly, the app should stop accepting new requests, finish the ones it's currently processing, and then close the database reader cleanly.
 
@@ -143,10 +143,10 @@ You need to instruct your Go application to listen for "Termination Signals" fro
 
 #### Acceptance Criteria (AC)
 
-- [ ] Signal Detection: The application does not exit immediately when Ctrl+C is pressed.
+- [x] Signal Detection: The application does not exit immediately when Ctrl+C is pressed.
 
-- [ ] Server Shutdown: The http.Server.Shutdown() method is called correctly using a background context.
+- [x] Server Shutdown: The http.Server.Shutdown() method is called correctly using a background context.
 
-- [ ] Resource Release: The MaxMind database reader is closed after the server stops accepting new requests.
+- [x] Resource Release: The MaxMind database reader is closed after the server stops accepting new requests.
 
-- [ ] Clean Exit: The program exits with status code 0 after a successful graceful shutdown.
+- [x] Clean Exit: The program exits with status code 0 after a successful graceful shutdown.
