@@ -39,7 +39,7 @@
   - data/ (to keep the AI from trying to "read" a binary database)
   - vendor/ (if present)
 
-### Task 1.2: Integrate MaxMind GeoLite2 Reader and Binary Database
+### Task 1.2: Integrate MaxMind GeoLite2 Reader and Binary Database ✅
 
 You need to bridge the gap between your Go code and the binary .mmdb file. This involves establishing a "Store" or "Service" in Go that opens the database and provides a safe, clean interface for other parts of your app to query.
 
@@ -65,7 +65,7 @@ You need to bridge the gap between your Go code and the binary .mmdb file. This 
 
 - [x] Self-Documentation: A small README.md entry exists in the /data folder explaining where to get the MaxMind file.
 
-### Task 1.3: Implement Geo-Fencing Business Logic (IP-to-Country Validation)
+### Task 1.3: Implement Geo-Fencing Business Logic (IP-to-Country Validation) ✅
 
 You need to create the logic that ties the IP lookup to the "White List" of countries provided in the request. This should be a clean, reusable function or method that doesn't care about HTTP or gRPC; it just cares about the "Yes/No" decision.
 
@@ -79,21 +79,21 @@ You need to create the logic that ties the IP lookup to the "White List" of coun
 
 - Result Object: Return a structured result that includes the decision (bool) and the metadata (the actual country found), which helps with logging later.
 
-- Tip: Efficiency matters in Go. Instead of looping through the allowed_countries slice for every request, a "Senior" approach for a large list of countries would be to convert the slice into a map[string]struct{} for $O(1)$ lookups. However, since the list of allowed countries for a single customer is likely small (usually 1–5), a simple loop is often faster due to CPU cache locality.
+- Tip: Efficiency matters in Go. Instead of looping through the allowed_countries slice for every request, a better approach for a large list of countries would be to convert the slice into a map[string]struct{} for $O(1)$ lookups. However, since the list of allowed countries for a single customer is likely small (usually 1–5), a simple loop is often faster due to CPU cache locality.
 
 #### Acceptance Criteria (AC)
 
-- [ ] Core Logic: A function exists that takes a string (IP) and a []string (Allowed Countries) and returns a bool.
+- [x] Core Logic: A function exists that takes a string (IP) and a []string (Allowed Countries) and returns a bool.
 
-- [ ] Accuracy: \* If IP=8.8.8.8 and Allowed=["US", "CA"], result is true.
+- [x] Accuracy: \* If IP=8.8.8.8 and Allowed=["US", "CA"], result is true.
 
-If IP=8.8.8.8 and Allowed=["GB"], result is false.
+- If IP=8.8.8.8 and Allowed=["GB"], result is false.
 
-- [ ] Case Sensitivity: The logic should be resilient to casing (e.g., "us" vs "US") if possible, or strictly documented as ISO-2 uppercase.
+- [x] Case Sensitivity: The logic should be resilient to casing (e.g., "us" vs "US") if possible, or strictly documented as ISO-2 uppercase.
 
-- [ ] Invalid Input: The function returns a clear error if the IP string provided is malformed (e.g., "not-an-ip").
+- [x] Invalid Input: The function returns a clear error if the IP string provided is malformed (e.g., "not-an-ip").
 
-- [ ] Unit Tested: At least 3 unit tests exist covering: a successful match, a blocked match, and an invalid IP.
+- [x] Unit Tested: At least 3 unit tests exist covering: a successful match, a blocked match, and an invalid IP.
 
 ### Task 1.4: Develop HTTP/JSON Handler and API Routing
 
