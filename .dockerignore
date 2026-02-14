@@ -1,0 +1,6 @@
+.git
+.gitignore
+.cursor
+*.md
+avoxi-geo-fence
+avoxi-service
