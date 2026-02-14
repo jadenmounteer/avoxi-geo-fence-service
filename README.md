@@ -5,74 +5,49 @@ A high-performance microservice designed to determine if a specific IP address i
 #### Prerequisites
 
 - **Go:** 1.25 or higher (for local development)
-- **MaxMind database:** Ensure `GeoLite2-Country.mmdb` is placed in the `data/` directory. See [data/README.md](data/README.md) for download instructions.
+- **MaxMind database:** Place `GeoLite2-Country.mmdb` in the `data/` directory. See [data/README.md](data/README.md) for download instructions.
 
-#### Running with Docker
-
-1. Place `GeoLite2-Country.mmdb` in the `data/` directory.
-2. Build and run:
+#### Quick Start in isolation (quick tests on your local machine).
 
 ```bash
-docker build -t avoxi-geo-fence .
-docker run -p 8080:8080 avoxi-geo-fence
+make run          # Build and run locally
+make docker-run   # Build and run in Docker
 ```
 
-To use a different host port:
+For Kubernetes (Kind), create a cluster once, then deploy (good for production environments or microservices):
 
 ```bash
-docker run -p 3000:8080 -e APP_PORT=8080 avoxi-geo-fence
+make kind-cluster   # One-time: create Kind cluster
+make k8s-up         # Build, load image, deploy
+make k8s-forward    # Port-forward to localhost:8080
 ```
 
-#### Running Locally
-
-1. Initialize the project (if needed):
-
-```bash
-go mod tidy
-```
-
-2. Build and run:
-
-```bash
-go build -o avoxi-geo-fence ./cmd/server
-./avoxi-geo-fence
-```
+Run `make help` for all available commands.
 
 #### Environment Variables
 
-| Variable  | Default                      | Description                                |
-| --------- | ---------------------------- | ------------------------------------------ |
-| APP_PORT  | 8080                         | Port the server listens on                 |
-| PORT      | (fallback if APP_PORT unset) | Alternative for Heroku, Cloud Run, etc.    |
-| DB_PATH   | data/GeoLite2-Country.mmdb   | Path to GeoLite2-Country.mmdb              |
-| LOG_LEVEL | info                         | Log level: debug, info, warn, error        |
+| Variable  | Default                      | Description                             |
+| --------- | ---------------------------- | --------------------------------------- |
+| APP_PORT  | 8080                         | Port the server listens on              |
+| PORT      | (fallback if APP_PORT unset) | Alternative for Heroku, Cloud Run, etc. |
+| DB_PATH   | data/GeoLite2-Country.mmdb   | Path to GeoLite2-Country.mmdb           |
+| LOG_LEVEL | info                         | Log level: debug, info, warn, error     |
 
 #### Test the Endpoint
 
-##### Good request
-
 ```bash
+# Good request
 curl -X POST http://localhost:8080/v1/check \
   -H "Content-Type: application/json" \
   -d '{"ip_address": "8.8.8.8", "allowed_countries": ["US", "CA"]}'
-```
 
-##### Bad request (invalid IP)
-
-```bash
+# Bad request (invalid IP) - returns 400
 curl -X POST http://localhost:8080/v1/check \
   -H "Content-Type: application/json" \
   -d '{"ip_address": "not-an-ip", "allowed_countries": ["US"]}'
-```
 
-Returns `400` with `{"error": "invalid IP: not-an-ip"}`.
-
-##### Bad request (empty country list)
-
-```bash
+# Bad request (empty country list) - returns 400
 curl -X POST http://localhost:8080/v1/check \
   -H "Content-Type: application/json" \
   -d '{"ip_address": "8.8.8.8", "allowed_countries": []}'
 ```
-
-Returns `400` with `{"error": "allowed_countries must contain at least one country"}`.

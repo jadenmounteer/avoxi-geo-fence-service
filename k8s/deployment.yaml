@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geo-fence-service
+  labels:
+    app: geo-fence-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geo-fence-service
+  template:
+    metadata:
+      labels:
+        app: geo-fence-service
+    spec:
+      containers:
+        - name: geo-fence
+          image: avoxi-geo-fence:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_PORT
+              value: "8080"
+            - name: DB_PATH
+              value: "data/GeoLite2-Country.mmdb"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10

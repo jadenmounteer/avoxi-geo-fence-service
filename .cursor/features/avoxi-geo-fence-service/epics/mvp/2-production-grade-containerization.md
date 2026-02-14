@@ -85,10 +85,10 @@ You will modify your application to look for environment variables at startup. I
 
 - [x] Documentation: The README includes a section listing all available environment variables and their purposes.
 
-### Task 2.4: Define Kubernetes Deployment and Service Manifests
+### Task 2.4: Define Kubernetes Deployment and Service Manifests ✅
 
 You need to create two primary YAML files (usually combined into one or kept in a /k8s folder). These files serve as the blueprint for your service's life in the cloud.
-Note: I have installed Kind (`brew install kind`) and kubectl (`kubectl`) in order to verify the manifests and probes.
+Note: I have already installed Kind (`brew install kind`) and kubectl (`kubectl`) in order to verify the manifests and probes.
 
 #### Key Actions:
 
@@ -102,15 +102,15 @@ Note: I have installed Kind (`brew install kind`) and kubectl (`kubectl`) in ord
 
 #### Acceptance Criteria (AC)
 
-- [ ] Deployment Object: Successfully creates a Deployment that references your Docker image name.
+- [x] Deployment Object: Successfully creates a Deployment that references your Docker image name.
 
-- [ ] Service Object: Successfully creates a Service that maps port 80 (external) to your app port (e.g., 8080).
+- [x] Service Object: Successfully creates a Service that maps port 80 (external) to your app port (e.g., 8080).
 
-- [ ] Environment Injection: The manifest includes a env section that sets DB_PATH and APP_PORT.
+- [x] Environment Injection: The manifest includes a env section that sets DB_PATH and APP_PORT.
 
-- [ ] Resource Management: Includes resources: requests and limits (e.g., 100m CPU, 128Mi Memory).
+- [x] Resource Management: Includes resources: requests and limits (e.g., 100m CPU, 128Mi Memory).
 
-- [ ] Clean Metadata: Uses standard labeling (e.g., app: geo-fence-service).
+- [x] Clean Metadata: Uses standard labeling (e.g., app: geo-fence-service).
 
 ### Task 2.5: Define Kubernetes Readiness and Liveness Probes
 
