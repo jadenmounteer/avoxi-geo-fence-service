@@ -1,13 +1,14 @@
 BINARY := avoxi-geo-fence
 IMAGE := avoxi-geo-fence:latest
 
-.PHONY: build run test clean docker-build docker-run kind-cluster kind-load k8s-deploy k8s-up k8s-forward help
+.PHONY: build run test clean proto docker-build docker-run kind-cluster kind-load k8s-deploy k8s-up k8s-forward help
 
 help:
 	@echo "Local:"
 	@echo "  make build        - Build the binary"
 	@echo "  make run          - Build and run locally"
 	@echo "  make test         - Run all tests"
+	@echo "  make proto        - Generate Go code from proto files"
 	@echo ""
 	@echo "Docker:"
 	@echo "  make docker-build - Build Docker image"
@@ -28,6 +29,13 @@ run: build
 
 test:
 	go test ./...
+
+proto:
+	PATH="$$PATH:$$(go env GOPATH)/bin" protoc -I. \
+		--go_out=. --go_opt=module=github.com/jadenmounteer/avoxi-geo-fence \
+		--go-grpc_out=. --go-grpc_opt=module=github.com/jadenmounteer/avoxi-geo-fence \
+		proto/geofence.proto
+	@echo "Generated internal/pb/geofence.pb.go and internal/pb/geofence_grpc.pb.go"
 
 clean:
 	rm -f $(BINARY)

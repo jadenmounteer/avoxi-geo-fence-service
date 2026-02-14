@@ -1,5 +1,8 @@
 # Dynamic data lyfecycle and resiliency
 
+The database file changes every 2 weeks. After this epic, a CRON job (not included in this epic) would be able to update the .db file every 24 hours
+and it wouldn't reboot the server. Users wouldn't know anything changed.
+
 ## Deliverable: A self-healing system that stays up-to-date without restarts.
 
 ### Task 4.1: Implement Thread-Safe In-Memory Data Swapping using sync.RWMutex

@@ -30,9 +30,9 @@ You will design the interface for your gRPC service. Unlike REST, where the "con
 
 - [x] Inclusion of Health Check: (Optional but Pro) Include a simple CheckHealth RPC to mirror your K8s probes in the gRPC world.
 
-### Task 3.2: Generate Go Code Bindings via protoc
+### Task 3.2: Generate Go Code Bindings via protoc✅
 
-You need to set up the tooling to compile your Protobuf file. This requires the protoc compiler and the Go-specific plugins. To make this "Senior Level," we won't just run a long command once; we will create a Makefile or a Go Generate script so any developer can recreate the code with one command.
+You need to set up the tooling to compile your Protobuf file. This requires the protoc compiler and the Go-specific plugins. We will create a Makefile or a Go Generate script so any developer can recreate the code with one command.
 
 Note: I already ran the following commands, ensuring I can generate gRPC code:
 
@@ -44,7 +44,7 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 #### Key Actions:
 
-- Tooling Installation: Ensure protoc, protoc-gen-go, and protoc-gen-go-grpc are installed in your environment.
+- Tooling Installation: Ensure protoc, protoc-gen-go, and protoc-gen-go-grpc are installed in your environment. ✅
 
 - Output Directory: Create the target folder (e.g., internal/pb) where the generated files will live.
 
@@ -54,19 +54,18 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 #### Acceptance Criteria (AC)
 
-- [ ] Successful Generation: Two files are created in your internal/pb (or similar) directory:
+- [x] Successful Generation: Two files are created in your internal/pb (or similar) directory:
+  - geofence.pb.go (Contains data structures/messages).
 
-geofence.pb.go (Contains data structures/messages).
+  - geofence_grpc.pb.go (Contains the gRPC service client and server interfaces).
 
-geofence_grpc.pb.go (Contains the gRPC service client and server interfaces).
+- [x] No Manual Edits: The generated files should never be edited by hand (verify they have the "DO NOT EDIT" header).
 
-- [ ] No Manual Edits: The generated files should never be edited by hand (verify they have the "DO NOT EDIT" header).
+- [x] Automated Script: A Makefile or scripts/gen-proto.sh exists so the team can re-generate code easily if the .proto changes.
 
-- [ ] Automated Script: A Makefile or scripts/gen-proto.sh exists so the team can re-generate code easily if the .proto changes.
+- [x] Importable: The generated code compiles without errors when imported into your main application.
 
-- [ ] Importable: The generated code compiles without errors when imported into your main application.
-
-- [ ] Make file is in project root.
+- [x] Make file is in project root.
 
 ### Task 3.3: Implement gRPC Server Interface and Method Logic
 
