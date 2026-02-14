@@ -2,7 +2,7 @@
 
 ## Deliverable: A functional Go service capable of determining geo-fencing permissions.
 
-### Task 1.1: Initialize Go Project Structure and Dependency Management
+### Task 1.1: Initialize Go Project Structure and Dependency Management ✅
 
 #### Key Actions:
 
@@ -45,7 +45,7 @@ You need to bridge the gap between your Go code and the binary .mmdb file. This 
 
 #### Key Actions:
 
-- Procure the Database: Download the GeoLite2-Country.mmdb file from MaxMind (or use a placeholder if you're in a restricted environment) and place it in your /data folder.
+- Procure the Database: Download the GeoLite2-Country.mmdb file from MaxMind (or use a placeholder if you're in a restricted environment) and place it in your /data folder. ✅
 
 - Initialize the Reader: Write the logic to open the file using the oschwald/geoip2-golang library.
 
@@ -55,15 +55,15 @@ You need to bridge the gap between your Go code and the binary .mmdb file. This 
 
 #### Acceptance Criteria (AC)
 
-- [ ] The project can successfully open a .mmdb file located in the /data directory at startup.
+- [x] The project can successfully open a .mmdb file located in the /data directory at startup.
 
-- [ ] A Lookup method exists that accepts a net.IP and returns a standard ISO Country Code (e.g., "US", "FR").
+- [x] A Lookup method exists that accepts a net.IP and returns a standard ISO Country Code (e.g., "US", "FR").
 
-- [ ] The code handles "Unknown" IPs gracefully (e.g., if an IP isn't in the database, it returns a specific error or an empty string, not a crash).
+- [x] The code handles "Unknown" IPs gracefully (e.g., if an IP isn't in the database, it returns a specific error or an empty string, not a crash).
 
-- [ ] The database reader is properly closed using defer or a dedicated Close() method to prevent memory leaks.
+- [x] The database reader is properly closed using defer or a dedicated Close() method to prevent memory leaks.
 
-- [ ] Self-Documentation: A small README.md entry exists in the /data folder explaining where to get the MaxMind file.
+- [x] Self-Documentation: A small README.md entry exists in the /data folder explaining where to get the MaxMind file.
 
 ### Task 1.3: Implement Geo-Fencing Business Logic (IP-to-Country Validation)
 
