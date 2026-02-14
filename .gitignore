@@ -1,0 +1,22 @@
+# Compiled binary
+avoxi-geo-fence
+avoxi-service
+*.exe
+
+# MaxMind GeoIP database (large binary - don't commit)
+data/*.mmdb
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE and editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local secrets and env overrides
+.env
+.env.local
+*.pem

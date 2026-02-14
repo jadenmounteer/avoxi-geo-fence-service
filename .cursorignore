@@ -1,0 +1,5 @@
+# MaxMind binary database - prevent AI from indexing
+data/
+
+# Vendor directory (if present)
+vendor/

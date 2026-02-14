@@ -6,36 +6,36 @@
 
 #### Key Actions:
 
-- Initialize the module: Use a naming convention that matches a remote repository (e.g., github.com/username/repo-name). (`go mod init`)
+- Initialize the module: Use a naming convention that matches a remote repository (e.g., github.com/username/repo-name). (`go mod init`) ✅
 
 - Create the Directory Tree:
 
-  ` /cmd/server/`: The entry point of the application.
+  ` /cmd/server/`: The entry point of the application. ✅
 
-  `/internal/`: For code you don't want other projects to import (the core logic).
+  `/internal/`: For code you don't want other projects to import (the core logic). ✅
 
-  `/data/`: To hold the MaxMind .mmdb file.
+  `/data/`: To hold the MaxMind .mmdb file. ✅
 
-  `/pkg/`: (Optional) for shared utility code.
+  `/pkg/`: (Optional) for shared utility code. ✅
 
-- Dependency Setup: Install the geoip2-golang library.
+- Dependency Setup: Install the geoip2-golang library. ✅
 
 - Ignore Files: Create .gitignore to keep binary files and local secrets out of Git, and .cursorignore to prevent Cursor/AI tools from indexing heavy binary data like the MaxMind database.
 
 #### Acceptance Criteria:
 
-- [ ] go.mod and go.sum files exist and the module name is correct.
+- [x] go.mod and go.sum files exist and the module name is correct.
 
-- [ ] The project structure follows the /cmd/ and /internal/ pattern.
+- [x] The project structure follows the /cmd/ and /internal/ pattern.
 
-- [ ] go mod verify passes without errors.
+- [x] go mod verify passes without errors.
 
-- [ ] .gitignore includes entries for:
+- [x] .gitignore includes entries for:
   - The compiled binary (e.g., avoxi-service)
   - The /data/\*.mmdb file (don't commit large binaries to Git!)
   - OS-specific files (e.g., .DS_Store)
 
-- [ ] .cursorignore is present and excludes:
+- [x] .cursorignore is present and excludes:
   - data/ (to keep the AI from trying to "read" a binary database)
   - vendor/ (if present)
 
