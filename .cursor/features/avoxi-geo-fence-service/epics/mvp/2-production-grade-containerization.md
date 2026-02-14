@@ -2,7 +2,7 @@
 
 ## Deliverable: Small, secure Docker image and K8s configuration files.
 
-### Task 2.1: Design Multi-Stage Dockerfile for Minimal Image Footprint
+### Task 2.1: Design Multi-Stage Dockerfile for Minimal Image Footprint ✅
 
 You need to create a Dockerfile that separates the build environment from the production environment.
 
@@ -20,17 +20,17 @@ You need to create a Dockerfile that separates the build environment from the pr
 
 #### Acceptance Criteria (AC)
 
-- [ ] Multi-Stage Structure: The Dockerfile contains at least two FROM statements.
+- [x] Multi-Stage Structure: The Dockerfile contains at least two FROM statements.
 
-- [ ] Minimal Footprint: The final image size is under 50MB (excluding the .mmdb file size).
+- [x] Minimal Footprint: The final image size is under 50MB (excluding the .mmdb file size).
 
-- [ ] Static Compilation: The Go build command includes flags to disable cgo (CGO_ENABLED=0) for maximum portability.
+- [x] Static Compilation: The Go build command includes flags to disable cgo (CGO_ENABLED=0) for maximum portability.
 
-- [ ] Non-Root User: The Dockerfile creates a system user and uses the USER instruction to run the binary.
+- [x] Non-Root User: The Dockerfile creates a system user and uses the USER instruction to run the binary.
 
-- [ ] Cleanliness: The image does not contain source code, Go toolchains, or shell history.
+- [x] Cleanliness: The image does not contain source code, Go toolchains, or shell history.
 
-### Task 2.2: Configure Structured Logging for Observability
+### Task 2.2: Configure Structured Logging for Observability ✅
 
 You will replace standard text logging with Go's native slog (introduced in Go 1.21). This allows you to output logs as JSON objects while maintaining high performance.
 

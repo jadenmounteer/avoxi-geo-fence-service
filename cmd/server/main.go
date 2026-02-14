@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -14,7 +13,13 @@ import (
 	"github.com/jadenmounteer/avoxi-geo-fence/internal/geofence"
 )
 
+const version = "1.0.0"
+
 func main() {
+	jsonHandler := slog.NewJSONHandler(os.Stdout, nil)
+	logger := slog.New(jsonHandler).With("service", "geo-fence-service", "version", version)
+	slog.SetDefault(logger)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -22,7 +27,8 @@ func main() {
 
 	store, err := geofence.NewGeoStore(geofence.DefaultDBPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("failed to open GeoIP database", "err", err)
+		os.Exit(1)
 	}
 
 	checker := geofence.NewChecker(store)
@@ -37,7 +43,8 @@ func main() {
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal(err)
+			slog.Error("server listen failed", "err", err)
+			os.Exit(1)
 		}
 	}()
 
