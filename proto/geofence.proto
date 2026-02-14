@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package geofence.v1;
+
+option go_package = "github.com/jadenmounteer/avoxi-geo-fence/internal/pb;pb";
+
+// GeoFenceService checks IP addresses against an allowed country list.
+service GeoFenceService {
+  rpc CheckAccess(CheckRequest) returns (CheckResponse);
+}
+
+message CheckRequest {
+  string ip_address = 1;
+  repeated string allowed_countries = 2;
+}
+
+message CheckResponse {
+  bool allowed = 1;
+  string country = 2;
+}
+
+// HealthService provides liveness/readiness for gRPC clients (per grpc-api rules).
+service HealthService {
+  rpc CheckHealth(HealthRequest) returns (HealthResponse);
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;
+}

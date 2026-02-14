@@ -1,8 +1,10 @@
 # High-Performance gRPC Interface
 
-## Deliverable: A dual-protocol server responding to both HTTP and gRPC.
+Note to self: gRPC (Remote Procedure Calls) essentially allows you to send a super fast message to another API. That API will then respond, possibly saying if a task was successfully completed or not. This is not asyncronous. It is useful in the context of this feature because it's a lot faster than JSON (5x, actually). This allows other services to check the geofence with extreme speed.
 
-### Task 3.1: Define Protocol Buffer (.proto) Service Contract
+## Deliverable: A dual-protocol server responding to both HTTP and gRPC. Supporting both allows it to be highly accessible and high-performant. Not everything can talk to gRCP, but for the microservices that can, it is soooooo fast.
+
+### Task 3.1: Define Protocol Buffer (.proto) Service Contract✅
 
 You will design the interface for your gRPC service. Unlike REST, where the "contract" is often loose documentation, gRPC requires a strict definition of your data structures and your service methods before you write any implementation code.
 
@@ -18,15 +20,15 @@ You will design the interface for your gRPC service. Unlike REST, where the "con
 
 #### Acceptance Criteria (AC)
 
-- [ ] Syntax: The file begins with syntax = "proto3";.
+- [x] Syntax: The file begins with syntax = "proto3";.
 
-- [ ] Data Types: Uses appropriate Protobuf types (e.g., string for IP, repeated string for the list of countries).
+- [x] Data Types: Uses appropriate Protobuf types (e.g., string for IP, repeated string for the list of countries).
 
-- [ ] Naming Conventions: Follows Google’s Style Guide (CamelCase for Messages, snake_case for field names).
+- [x] Naming Conventions: Follows Google’s Style Guide (CamelCase for Messages, snake_case for field names).
 
-- [ ] Field Tags: Every field in a message has a unique incrementing tag (e.g., string ip_address = 1;).
+- [x] Field Tags: Every field in a message has a unique incrementing tag (e.g., string ip_address = 1;).
 
-- [ ] Inclusion of Health Check: (Optional but Pro) Include a simple CheckHealth RPC to mirror your K8s probes in the gRPC world.
+- [x] Inclusion of Health Check: (Optional but Pro) Include a simple CheckHealth RPC to mirror your K8s probes in the gRPC world.
 
 ### Task 3.2: Generate Go Code Bindings via protoc
 
