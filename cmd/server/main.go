@@ -71,8 +71,11 @@ func main() {
 
 	checker := geofence.NewChecker(store)
 	handler := api.NewCheckHandler(checker)
+	healthHandler := api.NewHealthHandler(store)
 	mux := http.NewServeMux()
 	mux.Handle("/v1/check", api.LoggingMiddleware(handler))
+	mux.HandleFunc("/health", healthHandler.Liveness)
+	mux.HandleFunc("/ready", healthHandler.Ready)
 
 	server := &http.Server{
 		Addr:    ":" + cfg.port,

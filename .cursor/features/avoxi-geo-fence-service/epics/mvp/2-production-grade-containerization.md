@@ -112,7 +112,7 @@ Note: I have already installed Kind (`brew install kind`) and kubectl (`kubectl`
 
 - [x] Clean Metadata: Uses standard labeling (e.g., app: geo-fence-service).
 
-### Task 2.5: Define Kubernetes Readiness and Liveness Probes
+### Task 2.5: Define Kubernetes Readiness and Liveness Probes ✅
 
 You need to create a dedicated health-check mechanism within your Go application and then configure Kubernetes to monitor it.
 Note: I have installed Kind (`brew install kind`) and kubectl (`kubectl`) in order to verify the manifests and probes.
@@ -131,12 +131,16 @@ Note: I have installed Kind (`brew install kind`) and kubectl (`kubectl`) in ord
 
 #### Acceptance Criteria (AC)
 
-- [ ] Dedicated Endpoint: A GET /health route exists and returns JSON (e.g., {"status": "up"}).
+- [x] Dedicated Endpoint: A GET /health route exists and returns JSON (e.g., {"status": "up"}).
 
-- [ ] Liveness Probe: Added to the container spec; restarts the pod if the endpoint fails.
+```
+curl http://localhost:8080/health   # expect {"status":"up"} and 200
+```
 
-- [ ] Readiness Probe: Added to the container spec; prevents traffic from reaching the pod until the database is loaded.
+- [x] Liveness Probe: Added to the container spec; restarts the pod if the endpoint fails.
 
-- [ ] Non-Blocking: The health check logic is fast and doesn't put significant load on the CPU.
+- [x] Readiness Probe: Added to the container spec; prevents traffic from reaching the pod until the database is loaded.
 
-- [ ] Observability: If the health check fails, it should log the reason (e.g., "Database handle is nil") using your slog setup from Task 2.2.
+- [x] Non-Blocking: The health check logic is fast and doesn't put significant load on the CPU.
+
+- [x] Observability: If the health check fails, it should log the reason (e.g., "Database handle is nil") using your slog setup from Task 2.2.

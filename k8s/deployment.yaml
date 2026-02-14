@@ -33,12 +33,14 @@ spec:
               cpu: 500m
               memory: 256Mi
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /health
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /ready
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
