@@ -1,14 +1,15 @@
 BINARY := avoxi-geo-fence
 IMAGE := avoxi-geo-fence:latest
 
-.PHONY: build run test clean proto docker-build docker-run kind-cluster kind-load k8s-deploy k8s-up k8s-forward help
+.PHONY: build run test test-integration clean proto docker-build docker-run kind-cluster kind-load k8s-deploy k8s-up k8s-forward help
 
 help:
 	@echo "Local:"
-	@echo "  make build        - Build the binary"
-	@echo "  make run          - Build and run locally"
-	@echo "  make test         - Run all tests"
-	@echo "  make proto        - Generate Go code from proto files"
+	@echo "  make build           - Build the binary"
+	@echo "  make run             - Build and run locally"
+	@echo "  make test            - Run all tests"
+	@echo "  make test-integration - Run integration tests (requires GeoIP DB)"
+	@echo "  make proto           - Generate Go code from proto files"
 	@echo ""
 	@echo "Docker:"
 	@echo "  make docker-build - Build Docker image"
@@ -29,6 +30,9 @@ run: build
 
 test:
 	go test ./...
+
+test-integration:
+	go test -tags=integration ./cmd/server -v
 
 proto:
 	PATH="$$PATH:$$(go env GOPATH)/bin" protoc -I. \
