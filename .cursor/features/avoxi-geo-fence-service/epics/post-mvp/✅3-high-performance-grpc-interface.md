@@ -91,7 +91,7 @@ Now that you have the generated "stubs" from Task 3.2, you need to actually writ
 
 - [x] Graceful Errors: If the lookup fails, the server returns a proper gRPC error using status.Error.
 
-### Task 3.4: Configure Concurrent HTTP and gRPC Server Listeners
+### Task 3.4: Configure Concurrent HTTP and gRPC Server Listeners✅
 
 You need to launch both servers simultaneously without one blocking the other. In Go, we do this using Goroutines and a sync.WaitGroup (or an errgroup) to manage their lifecycle.
 
@@ -107,15 +107,15 @@ You need to launch both servers simultaneously without one blocking the other. I
 
 #### Acceptance Criteria (AC)
 
-- [ ] Dual Connectivity: I can successfully curl the HTTP port AND run a gRPC client call against the gRPC port.
+- [x] Dual Connectivity: I can successfully curl the HTTP port AND run a gRPC client call against the gRPC port.
 
-- [ ] Non-Blocking: Neither server prevents the other from starting.
+- [x] Non-Blocking: Neither server prevents the other from starting.
 
-- [ ] Clean Shutdown: When a termination signal is received, both servers stop gracefully (using the logic from Task 1.5).
+- [x] Clean Shutdown: When a termination signal is received, both servers stop gracefully (using the logic from Task 1.5).
 
-- [ ] Configuration: Ports for both HTTP and gRPC are configurable via environment variables (e.g., HTTP_PORT and GRPC_PORT).
+- [x] Configuration: Ports for both HTTP and gRPC are configurable via environment variables (e.g., HTTP_PORT and GRPC_PORT).
 
-### Task 3.5: Implement gRPC Reflection for Easier Service Discovery and Testing
+### Task 3.5: Implement gRPC Reflection for Easier Service Discovery and Testing✅
 
 You will register the reflection service on your gRPC server. This is a one-liner in Go, but it fundamentally changes how easy your service is to debug in a Kubernetes environment.
 
@@ -132,10 +132,10 @@ I have already ran `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@lates
 
 #### Acceptance Criteria (AC)
 
-- [ ] Reflection Enabled: The gRPC server has reflection registered.
+- [x] Reflection Enabled: The gRPC server has reflection registered.
 
-- [ ] Discovery: Running grpcurl -plaintext localhost:9090 list returns geofence.v1.GeoFenceService.
+- [x] Discovery: Running grpcurl -plaintext localhost:9090 list returns geofence.v1.GeoFenceService.
 
-- [ ] Method Inspection: Running grpcurl can describe the CheckAccess method and its request/response types.
+- [x] Method Inspection: Running grpcurl can describe the CheckAccess method and its request/response types.
 
-- [ ] No Proto Required: An external developer can call your service without having the physical .proto file.
+- [x] No Proto Required: An external developer can call your service without having the physical .proto file.

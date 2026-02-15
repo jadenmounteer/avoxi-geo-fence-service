@@ -49,14 +49,14 @@ Run `make help` for all available commands.
 
 #### Environment Variables
 
-| Variable   | Default                      | Description                               |
-| ---------- | ---------------------------- | ----------------------------------------- |
-| HTTP_PORT  | 8080                         | HTTP server port                          |
-| GRPC_PORT  | 9090                         | gRPC server port                          |
-| APP_PORT   | (fallback if HTTP_PORT unset)| Alternative for HTTP port                 |
-| PORT       | (fallback if APP_PORT unset) | Alternative for Heroku, Cloud Run, etc.   |
-| DB_PATH    | data/GeoLite2-Country.mmdb   | Path to GeoLite2-Country.mmdb             |
-| LOG_LEVEL  | info                         | Log level: debug, info, warn, error       |
+| Variable  | Default                       | Description                             |
+| --------- | ----------------------------- | --------------------------------------- |
+| HTTP_PORT | 8080                          | HTTP server port                        |
+| GRPC_PORT | 9090                          | gRPC server port                        |
+| APP_PORT  | (fallback if HTTP_PORT unset) | Alternative for HTTP port               |
+| PORT      | (fallback if APP_PORT unset)  | Alternative for Heroku, Cloud Run, etc. |
+| DB_PATH   | data/GeoLite2-Country.mmdb    | Path to GeoLite2-Country.mmdb           |
+| LOG_LEVEL | info                          | Log level: debug, info, warn, error     |
 
 #### Testing Both Servers
 
