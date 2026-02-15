@@ -2,6 +2,9 @@
 
 A high-performance microservice designed to determine if a specific IP address is allowed access based on a country whitelist. Built with Go 1.25+ and the MaxMind GeoLite2 database.
 
+#### Video Overview
+https://www.loom.com/share/0af100a00e854576a1074587f5fd9944
+
 #### Architecture
 
 The service exposes both HTTP and gRPC transports, sharing the same GeoStore and business logic:
