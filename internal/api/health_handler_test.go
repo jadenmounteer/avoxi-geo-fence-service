@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -9,6 +10,9 @@ import (
 	"testing"
 
 	"github.com/jadenmounteer/avoxi-geo-fence/internal/geofence"
+	"github.com/jadenmounteer/avoxi-geo-fence/internal/pb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func TestHealthHandler_Liveness(t *testing.T) {
@@ -80,5 +84,38 @@ func TestHealthHandler_Ready_NilStore(t *testing.T) {
 	}
 	if errResp.Error == "" {
 		t.Error("expected error field in response")
+	}
+}
+
+func TestHealthHandler_CheckHealth_WithStore(t *testing.T) {
+	dbPath := filepath.Join("..", "..", "data", "GeoLite2-Country.mmdb")
+	store, err := geofence.NewGeoStore(dbPath)
+	if err != nil {
+		t.Skipf("GeoLite2-Country.mmdb not found at %s; skip CheckHealth test with store", dbPath)
+	}
+	defer store.Close()
+
+	handler := NewHealthHandler(store)
+	resp, err := handler.CheckHealth(context.Background(), &pb.HealthRequest{})
+	if err != nil {
+		t.Fatalf("CheckHealth() unexpected error: %v", err)
+	}
+	if resp.Status != "ready" {
+		t.Errorf("Status = %q, want ready", resp.Status)
+	}
+}
+
+func TestHealthHandler_CheckHealth_NilStore(t *testing.T) {
+	handler := NewHealthHandler(nil)
+	_, err := handler.CheckHealth(context.Background(), &pb.HealthRequest{})
+	if err == nil {
+		t.Fatal("CheckHealth() expected error, got nil")
+	}
+	st, ok := status.FromError(err)
+	if !ok {
+		t.Fatalf("error is not a gRPC status: %v", err)
+	}
+	if st.Code() != codes.Unavailable {
+		t.Errorf("status code = %v, want Unavailable", st.Code())
 	}
 }
