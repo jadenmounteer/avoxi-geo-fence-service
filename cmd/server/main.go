@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log/slog"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,30 +13,42 @@ import (
 
 	"github.com/jadenmounteer/avoxi-geo-fence/internal/api"
 	"github.com/jadenmounteer/avoxi-geo-fence/internal/geofence"
+	"github.com/jadenmounteer/avoxi-geo-fence/internal/pb"
+	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const version = "1.0.0"
 
 type config struct {
-	port     string
+	httpPort string
+	grpcPort string
 	dbPath   string
 	logLevel slog.Level
 }
 
 func loadConfig() config {
-	port := os.Getenv("APP_PORT")
-	if port == "" {
-		port = os.Getenv("PORT")
+	httpPort := os.Getenv("HTTP_PORT")
+	if httpPort == "" {
+		httpPort = os.Getenv("APP_PORT")
 	}
-	if port == "" {
-		port = "8080"
+	if httpPort == "" {
+		httpPort = os.Getenv("PORT")
+	}
+	if httpPort == "" {
+		httpPort = "8080"
+	}
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "9090"
 	}
 	dbPath := os.Getenv("DB_PATH")
 	if dbPath == "" {
 		dbPath = "data/GeoLite2-Country.mmdb"
 	}
 	level := parseLogLevel(os.Getenv("LOG_LEVEL"))
-	return config{port: port, dbPath: dbPath, logLevel: level}
+	return config{httpPort: httpPort, grpcPort: grpcPort, dbPath: dbPath, logLevel: level}
 }
 
 func parseLogLevel(s string) slog.Level {
@@ -70,26 +83,41 @@ func main() {
 	}
 
 	checker := geofence.NewChecker(store)
-	handler := api.NewCheckHandler(checker)
 	healthHandler := api.NewHealthHandler(store)
+
 	mux := http.NewServeMux()
-	mux.Handle("/v1/check", api.LoggingMiddleware(handler))
+	mux.Handle("/v1/check", api.LoggingMiddleware(api.NewCheckHandler(checker)))
 	mux.HandleFunc("/health", healthHandler.Liveness)
 	mux.HandleFunc("/ready", healthHandler.Ready)
 
-	server := &http.Server{
-		Addr:    ":" + cfg.port,
+	httpServer := &http.Server{
+		Addr:    ":" + cfg.httpPort,
 		Handler: mux,
 	}
 
-	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			slog.Error("server listen failed", "err", err)
-			os.Exit(1)
-		}
-	}()
+	grpcServer := grpc.NewServer()
+	pb.RegisterGeoFenceServiceServer(grpcServer, api.NewGeoFenceServer(checker))
+	pb.RegisterHealthServiceServer(grpcServer, healthHandler)
+	reflection.Register(grpcServer)
 
-	slog.Info("server starting", "port", cfg.port)
+	lis, err := net.Listen("tcp", ":"+cfg.grpcPort)
+	if err != nil {
+		slog.Error("gRPC listen failed", "err", err)
+		os.Exit(1)
+	}
+
+	g, _ := errgroup.WithContext(context.Background())
+	g.Go(func() error {
+		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			return err
+		}
+		return nil
+	})
+	g.Go(func() error {
+		return grpcServer.Serve(lis)
+	})
+
+	slog.Info("server starting", "http_port", cfg.httpPort, "grpc_port", cfg.grpcPort)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
@@ -97,13 +125,19 @@ func main() {
 
 	slog.Info("shutting down gracefully")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := server.Shutdown(ctx); err != nil {
-		slog.Error("server shutdown", "err", err)
+
+	grpcServer.GracefulStop()
+	if err := httpServer.Shutdown(shutdownCtx); err != nil {
+		slog.Error("http server shutdown", "err", err)
 	}
 	if err := store.Close(); err != nil {
 		slog.Error("close GeoStore", "err", err)
+	}
+
+	if err := g.Wait(); err != nil {
+		slog.Error("server error", "err", err)
 	}
 
 	slog.Info("shutdown complete")
