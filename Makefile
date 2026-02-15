@@ -13,7 +13,7 @@ help:
 	@echo ""
 	@echo "Docker:"
 	@echo "  make docker-build - Build Docker image"
-	@echo "  make docker-run   - Run container (port 8080)"
+	@echo "  make docker-run   - Run container (ports 8080, 9090)"
 	@echo ""
 	@echo "Kubernetes (Kind):"
 	@echo "  make kind-cluster - Create Kind cluster (one-time)"
@@ -48,7 +48,7 @@ docker-build:
 	docker build -t $(IMAGE) .
 
 docker-run: docker-build
-	docker run -p 8080:8080 $(IMAGE)
+	docker run -p 8080:8080 -p 9090:9090 $(IMAGE)
 
 kind-cluster:
 	kind create cluster

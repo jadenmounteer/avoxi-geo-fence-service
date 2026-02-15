@@ -93,6 +93,10 @@ curl -X POST http://localhost:8080/v1/check \
   -H "Content-Type: application/json" \
   -d '{"ip_address": "8.8.8.8", "allowed_countries": ["US", "CA"]}'
 
+# Good request with grpc
+grpcurl -plaintext -d '{"ip_address":"8.8.8.8","allowed_countries":["US","CA"]}' \
+  localhost:9090 geofence.v1.GeoFenceService/CheckAccess
+
 # Bad request (invalid IP) - returns 400
 curl -X POST http://localhost:8080/v1/check \
   -H "Content-Type: application/json" \
