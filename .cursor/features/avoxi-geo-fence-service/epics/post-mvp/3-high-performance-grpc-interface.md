@@ -67,7 +67,7 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 - [x] Make file is in project root.
 
-### Task 3.3: Implement gRPC Server Interface and Method Logic
+### Task 3.3: Implement gRPC Server Interface and Method Logic✅
 
 Now that you have the generated "stubs" from Task 3.2, you need to actually write the Go logic that satisfies the gRPC interface. You aren't rewriting your business logic; you are simply "wrapping" the logic you wrote in Task 1.3 inside a gRPC handler.
 
@@ -83,13 +83,13 @@ Now that you have the generated "stubs" from Task 3.2, you need to actually writ
 
 #### Acceptance Criteria (AC)
 
-- [ ] Interface Satisfaction: The server struct correctly implements the GeoFenceServiceServer interface.
+- [x] Interface Satisfaction: The server struct correctly implements the GeoFenceServiceServer interface.
 
-- [ ] Request Handling: The CheckAccess method correctly extracts the IP and Allowed List from the Protobuf request object.
+- [x] Request Handling: The CheckAccess method correctly extracts the IP and Allowed List from the Protobuf request object.
 
-- [ ] Response Construction: The method returns a CheckAccessResponse containing the boolean result and the country code.
+- [x] Response Construction: The method returns a CheckAccessResponse containing the boolean result and the country code.
 
-- [ ] Graceful Errors: If the lookup fails, the server returns a proper gRPC error using status.Error.
+- [x] Graceful Errors: If the lookup fails, the server returns a proper gRPC error using status.Error.
 
 ### Task 3.4: Configure Concurrent HTTP and gRPC Server Listeners
 

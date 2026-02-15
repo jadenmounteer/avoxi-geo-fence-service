@@ -16,14 +16,16 @@ func (m mockLookuper) Lookup(ip net.IP) (string, error) {
 
 func TestChecker_Check(t *testing.T) {
 	tests := []struct {
-		name             string
-		ipStr            string
-		allowedCountries []string
-		mockLookup       func(net.IP) (string, error)
-		wantAllowed      bool
-		wantCountry      string
-		wantErr          bool
-		expectErrUnknown bool
+		name                  string
+		ipStr                 string
+		allowedCountries      []string
+		mockLookup            func(net.IP) (string, error)
+		wantAllowed           bool
+		wantCountry           string
+		wantErr               bool
+		expectErrUnknown      bool
+		expectErrInvalidIP    bool
+		expectErrEmptyAllowed bool
 	}{
 		{
 			name:             "successful match",
@@ -49,6 +51,7 @@ func TestChecker_Check(t *testing.T) {
 			allowedCountries: []string{"US"},
 			mockLookup:       nil,
 			wantErr:          true,
+			expectErrInvalidIP: true,
 		},
 		{
 			name:             "unknown IP",
@@ -61,13 +64,12 @@ func TestChecker_Check(t *testing.T) {
 			expectErrUnknown: true,
 		},
 		{
-			name:             "empty allowed list",
-			ipStr:            "8.8.8.8",
-			allowedCountries: []string{},
-			mockLookup:       func(net.IP) (string, error) { return "US", nil },
-			wantAllowed:      false,
-			wantCountry:      "US",
-			wantErr:          false,
+			name:                   "empty allowed list",
+			ipStr:                  "8.8.8.8",
+			allowedCountries:       []string{},
+			mockLookup:             func(net.IP) (string, error) { return "US", nil },
+			wantErr:                true,
+			expectErrEmptyAllowed:  true,
 		},
 		{
 			name:             "case insensitive",
@@ -96,6 +98,12 @@ func TestChecker_Check(t *testing.T) {
 				}
 				if tt.expectErrUnknown && !errors.Is(err, ErrUnknownIP) {
 					t.Errorf("expected ErrUnknownIP, got %v", err)
+				}
+				if tt.expectErrInvalidIP && !errors.Is(err, ErrInvalidIP) {
+					t.Errorf("expected ErrInvalidIP, got %v", err)
+				}
+				if tt.expectErrEmptyAllowed && !errors.Is(err, ErrEmptyAllowedCountries) {
+					t.Errorf("expected ErrEmptyAllowedCountries, got %v", err)
 				}
 				return
 			}

@@ -7,6 +7,12 @@ import (
 	"strings"
 )
 
+// ErrEmptyAllowedCountries is returned when allowed_countries is empty.
+var ErrEmptyAllowedCountries = errors.New("allowed_countries must contain at least one country")
+
+// ErrInvalidIP is returned when the IP address string cannot be parsed.
+var ErrInvalidIP = errors.New("invalid IP")
+
 // CountryLookuper provides IP-to-country lookup. GeoStore implements this interface.
 type CountryLookuper interface {
 	Lookup(ip net.IP) (string, error)
@@ -30,11 +36,14 @@ func NewChecker(lookup CountryLookuper) *Checker {
 
 // Check determines whether the given IP address is in one of the allowed countries.
 // It parses IPv4 and IPv6 addresses, looks up the country, and compares case-insensitively.
-// Returns an error for malformed IP strings or when the IP is not found in the database.
+// Returns an error for malformed IP strings, empty allowed list, or when the IP is not found in the database.
 func (c *Checker) Check(ipStr string, allowedCountries []string) (CheckResult, error) {
+	if len(allowedCountries) == 0 {
+		return CheckResult{}, ErrEmptyAllowedCountries
+	}
 	ip := net.ParseIP(ipStr)
 	if ip == nil {
-		return CheckResult{}, fmt.Errorf("invalid IP: %s", ipStr)
+		return CheckResult{}, fmt.Errorf("%w: %s", ErrInvalidIP, ipStr)
 	}
 
 	country, err := c.lookup.Lookup(ip)
@@ -43,10 +52,6 @@ func (c *Checker) Check(ipStr string, allowedCountries []string) (CheckResult, e
 			return CheckResult{Allowed: false, Country: ""}, fmt.Errorf("lookup: %w", err)
 		}
 		return CheckResult{}, fmt.Errorf("lookup: %w", err)
-	}
-
-	if len(allowedCountries) == 0 {
-		return CheckResult{Allowed: false, Country: country}, nil
 	}
 
 	countryUpper := strings.ToUpper(country)
