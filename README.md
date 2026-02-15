@@ -1,4 +1,4 @@
-#### AVOXI Geo-Fence Service
+## AVOXI Geo-Fence Service
 
 A high-performance microservice designed to determine if a specific IP address is allowed access based on a country whitelist. Built with Go 1.25+ and the MaxMind GeoLite2 database.
 
@@ -23,6 +23,31 @@ flowchart TB
     HTTP --> HealthHandler
     GRPC --> GeoFenceServer
     GRPC --> HealthHandler
+```
+
+**Request flow** – how a check request moves through the system:
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant HTTP as HTTP Server
+    participant gRPC as gRPC Server
+    participant Handler as CheckHandler / GeoFenceServer
+    participant Checker as geofence.Checker
+    participant Store as GeoStore
+
+    Client->>HTTP: POST /v1/check (ip, allowed_countries)
+    Client->>gRPC: CheckAccess(ip, allowed_countries)
+    HTTP->>Handler: route request
+    gRPC->>Handler: route request
+    Handler->>Checker: Check(ipStr, countries)
+    Checker->>Store: Lookup(ip)
+    Store-->>Checker: country code
+    Checker-->>Handler: CheckResult(allowed, country)
+    Handler-->>HTTP: response
+    Handler-->>gRPC: response
+    HTTP-->>Client: JSON
+    gRPC-->>Client: protobuf
 ```
 
 #### Prerequisites
